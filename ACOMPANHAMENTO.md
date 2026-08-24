@@ -1,9 +1,9 @@
 # Acompanhamento - Mini Desafio RAG VendeFácil
 
 **Integrante 1:** Patricia Oquendo Duran - [@patriciaduran](https://github.com/patriciaduran)
-**Integrante 2:** Nome Completo - [@usuario-github](https://github.com/usuario-github)
+**Integrante 2:** Diogo Oliveira Vieira - [@Diogooliveira10](https://github.com/Diogooliveira10)
 
-**Repositório:** `rag-vendefacil-<sobrenome1>-<sobrenome2>`
+**Repositório:** `rag-vendefacil-08-duran-oliveira`
 
 ---
 
@@ -19,9 +19,9 @@
 <details>
 <summary>Exemplo de relato individual bom × ruim</summary>
 
-❌ *"Trabalhei na parte de ingestão junto com meu colega. Avançamos bastante e conseguimos carregar os arquivos."*
+❌ _"Trabalhei na parte de ingestão junto com meu colega. Avançamos bastante e conseguimos carregar os arquivos."_
 
-✅ *"Implementei os loaders de CSV e JSONL em `src/ingest.py`. Decidi serializar cada linha do `customers.csv` como frase em linguagem natural em vez de manter o formato separado por vírgula, porque nos primeiros testes de similaridade os chunks CSV crus não recuperavam nada - o embedding não separa campo de valor. Travei ~40 min no `tickets.jsonl`: o `state` estava indo para o texto do chunk mas não para os metadados, então o filtro voltava vazio. Resolvi movendo a extração para antes da criação do `Document`. Usei o Claude para gerar o esqueleto do parser de JSONL; ajustei o schema de metadados na mão."*
+✅ _"Implementei os loaders de CSV e JSONL em `src/ingest.py`. Decidi serializar cada linha do `customers.csv` como frase em linguagem natural em vez de manter o formato separado por vírgula, porque nos primeiros testes de similaridade os chunks CSV crus não recuperavam nada - o embedding não separa campo de valor. Travei ~40 min no `tickets.jsonl`: o `state` estava indo para o texto do chunk mas não para os metadados, então o filtro voltava vazio. Resolvi movendo a extração para antes da criação do `Document`. Usei o Claude para gerar o esqueleto do parser de JSONL; ajustei o schema de metadados na mão."_
 
 </details>
 
@@ -33,31 +33,42 @@
 
 ### Relato individual - Patricia Oquendo Duran
 
-* Aceitei convite para organização "residencia-puc"
-* Clonei repositório
-* Configurei minha identidade (nome e e-mail) 
-* Iniciei arquivo ACOMPANHAMENTO.md 
+- Aceitei convite para organização "residencia-puc"
+- Clonei repositório
+- Configurei minha identidade (nome e e-mail)
+- Iniciei arquivo ACOMPANHAMENTO.md
 
-### Relato individual - [Nome do Integrante 2]
+### Relato individual - Diogo Oliveira
 
-<!-- Escreva você mesmo, em primeira pessoa. O que implementou, que decisão tomou e por quê, onde travou. -->
+- Criei da Organization
+- Fiz o Fork do repositório base
+- Adicionei os membros para o repositória
+- CClonei repositório
+- Configurei minha identidade (nome e e-mail)
+- Iniciei arquivo ACOMPANHAMENTO.md
+- Criei branch feature/puc2
 
 ### Resumo do dia (escrito em conjunto)
 
-**Entregamos hoje:**
+## **Entregamos hoje:**
+
+- Ambiente configurado para iniciarmos o projeto.
+
+## **Ficou pendente:**
+
+- Iniciar a primeira etapa do projeto.
+
+## **Bloqueios em aberto:**
+
 -
 
-**Ficou pendente:**
--
+## **Próximo passo (início do encontro 2):**
 
-**Bloqueios em aberto:**
--
+- Realizar a etapa 1 e dividir as tarefas do grupo.
 
-**Próximo passo (início do encontro 2):**
--
+## **Uso de assistentes de IA:**
 
-**Uso de assistentes de IA:**
--
+- Até o momento não foi utilizada.
 
 ---
 
@@ -71,20 +82,15 @@
 
 ### Resumo do dia (escrito em conjunto)
 
-**Entregamos hoje:**
--
+## **Entregamos hoje:**
 
-**Ficou pendente:**
--
+## **Ficou pendente:**
 
-**Bloqueios em aberto:**
--
+## **Bloqueios em aberto:**
 
-**Próximo passo (início do encontro 3):**
--
+## **Próximo passo (início do encontro 3):**
 
-**Uso de assistentes de IA:**
--
+## **Uso de assistentes de IA:**
 
 ---
 
@@ -98,20 +104,15 @@
 
 ### Resumo do dia (escrito em conjunto)
 
-**Entregamos hoje:**
--
+## **Entregamos hoje:**
 
-**Ficou pendente:**
--
+## **Ficou pendente:**
 
-**Bloqueios em aberto:**
--
+## **Bloqueios em aberto:**
 
-**Próximo passo (início do encontro 4):**
--
+## **Próximo passo (início do encontro 4):**
 
-**Uso de assistentes de IA:**
--
+## **Uso de assistentes de IA:**
 
 ---
 
@@ -125,21 +126,16 @@
 
 ### Resumo do dia (escrito em conjunto)
 
-**Entregamos hoje:**
--
+## **Entregamos hoje:**
 
-**Ficou pendente:**
--
+## **Ficou pendente:**
 
-**Bloqueios em aberto:**
--
+## **Bloqueios em aberto:**
 
-**Preparação para o Demo Day:**
--
+## **Preparação para o Demo Day:**
 
-**Uso de assistentes de IA:**
--
+## **Uso de assistentes de IA:**
 
 ---
 
-*TIC em Trilhas · PUC-Rio · Instituto ECOA · MCTI Futuro · Softex*
+_TIC em Trilhas · PUC-Rio · Instituto ECOA · MCTI Futuro · Softex_
