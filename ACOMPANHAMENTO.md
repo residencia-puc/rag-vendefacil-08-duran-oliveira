@@ -1,6 +1,6 @@
 # Acompanhamento - Mini Desafio RAG VendeFácil
 
-**Integrante 1:** Nome Completo - [@usuario-github](https://github.com/usuario-github)
+**Integrante 1:** Patricia Oquendo Duran - [@patriciaduran](https://github.com/patriciaduran)
 **Integrante 2:** Nome Completo - [@usuario-github](https://github.com/usuario-github)
 
 **Repositório:** `rag-vendefacil-<sobrenome1>-<sobrenome2>`
@@ -27,13 +27,16 @@
 
 ---
 
-## Encontro 1 - AAAA-MM-DD
+## Encontro 1 - 2026-08-24
 
 **Etapa:** 1 - Ingestão heterogênea, metadados e indexação vetorial
 
-### Relato individual - [Nome do Integrante 1]
+### Relato individual - Patricia Oquendo Duran
 
-<!-- Escreva você mesmo, em primeira pessoa. O que implementou, que decisão tomou e por quê, onde travou. -->
+* Aceitei convite para organização "residencia-puc"
+* Clonei repositório
+* Configurei minha identidade (nome e e-mail) 
+* Iniciei arquivo ACOMPANHAMENTO.md 
 
 ### Relato individual - [Nome do Integrante 2]
 
