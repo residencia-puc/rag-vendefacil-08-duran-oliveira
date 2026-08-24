@@ -37,6 +37,8 @@
 - Clonei repositório
 - Configurei minha identidade (nome e e-mail)
 - Iniciei arquivo ACOMPANHAMENTO.md
+- Criei branch feature/puc1
+- Fiz Pull Request para main
 
 ### Relato individual - Diogo Oliveira
 
@@ -47,6 +49,7 @@
 - Configurei minha identidade (nome e e-mail)
 - Iniciei arquivo ACOMPANHAMENTO.md
 - Criei branch feature/puc2
+- Fiz Pull Request para main
 
 ### Resumo do dia (escrito em conjunto)
 
