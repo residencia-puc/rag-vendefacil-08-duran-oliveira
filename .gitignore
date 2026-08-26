@@ -1,0 +1,8 @@
+# Environments
+.env
+
+# Virtual Environments
+venv/
+
+# Cache do Python (gerado automaticamente)
+__pycache__/
