@@ -73,7 +73,6 @@
 
 - Até o momento não foi utilizada.
 
-
 ---
 
 ## Encontro 2 - 2026-08-26
@@ -82,15 +81,15 @@
 
 ### Relato individual - Patricia Oquendo Duran
 
-* Criei arquivos .env, .gitignore 
-* Criem ambiente venv
-* Analisei os arquivos da pasta data 
-* Criei um dicionário de dados para um melhor entendimentos dos arquivos. O dicionário ainda está em andamento. 
+- Criei arquivos .env, .gitignore
+- Criem ambiente venv
+- Analisei os arquivos da pasta data
+- Criei um dicionário de dados para um melhor entendimentos dos arquivos. O dicionário ainda está em andamento.
 
+### Relato individual - Diogo Oliveira Vieira
 
-### Relato individual - [Nome do Integrante 2]
-
-
+- Criei ambiente .env na minha máquina
+- Pesquisas sobre como os arquivos serão utilizados e qual é a melhor maneira de implementar o RAG para realizar a leitura e a consulta desses diferentes formatos de arquivo.
 
 ### Resumo do dia (escrito em conjunto)
 
@@ -98,37 +97,47 @@ Definimos algumas perguntas possíveis para o RAG. Exemplos:
 
 **vendas**
 
-* Quais são os produtos do cliente com id xxx (para oferecer outros produtos)
-* Quantas vendas foram estornadas esse mês xxx
-* Quantas vendas por tipo de pagamento esse mês xxx
-* Qual a forma de pagamento mais utilizada por ano
-* Qual a região do país com maior faturamento
-* Qual a filial do cliente xxxx com maior faturamento e menor faturamento nos últimos 3 meses
+- Quais são os produtos do cliente com id xxx (para oferecer outros produtos)
+- Quantas vendas foram estornadas esse mês xxx
+- Quantas vendas por tipo de pagamento esse mês xxx
+- Qual a forma de pagamento mais utilizada por ano
+- Qual a região do país com maior faturamento
+- Qual a filial do cliente xxxx com maior faturamento e menor faturamento nos últimos 3 meses
 
 **suporte**
 
-* Quais são os tickets abertos do cliente xxx
-* Quais foram os logs gerados hoje pelo sistema
+- Quais são os tickets abertos do cliente xxx
+- Quais foram os logs gerados hoje pelo sistema
 
 **produto**
 
-* Quais clientes ficaram insatisfeitos com o atendimento
-* Quais são as informações apresentadas no relatório dre gerencial
-
+- Quais clientes ficaram insatisfeitos com o atendimento
+- Quais são as informações apresentadas no relatório dre gerencial
 
 ## **Entregamos hoje:**
 
+- Iniciamos o projeto
+
 ## **Ficou pendente:**
+
+- Ingestão heterogênea, metadados e indexação vetorial
 
 ## **Bloqueios em aberto:**
 
+- Necessidade de pesquisa sobre como processar os arquivos para o RAG (tipos diferentes e com dados sensíveis)
+
 ## **Próximo passo (início do encontro 3):**
 
+- Próximo passo: Pesquisar técnicas de processamento e processar arquivos
+
 ## **Uso de assistentes de IA:**
+
+- Para pesquisas e geração das tabelas do dicionário de dados
 
 ---
 
 ## Encontro 3 - AAAA-MM-DD
+
 **Etapa:** 2 - Busca híbrida e filtragem por metadados
 **Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD
 
