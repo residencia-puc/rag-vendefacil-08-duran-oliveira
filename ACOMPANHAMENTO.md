@@ -73,17 +73,48 @@
 
 - Até o momento não foi utilizada.
 
+
 ---
 
-## Encontro 2 - AAAA-MM-DD
+## Encontro 2 - 2026-08-26
 
-**Etapa:** 2 - Busca híbrida e filtragem por metadados
+**Etapa:** 1 - Ingestão heterogênea, metadados e indexação vetorial
 
-### Relato individual - [Nome do Integrante 1]
+### Relato individual - Patricia Oquendo Duran
+
+* Criei arquivos .env, .gitignore 
+* Criem ambiente venv
+* Analisei os arquivos da pasta data 
+* Criei um dicionário de dados para um melhor entendimentos dos arquivos. O dicionário ainda está em andamento. 
+
 
 ### Relato individual - [Nome do Integrante 2]
 
+
+
 ### Resumo do dia (escrito em conjunto)
+
+Definimos algumas perguntas possíveis para o RAG. Exemplos:
+
+**vendas**
+
+* Quais são os produtos do cliente com id xxx (para oferecer outros produtos)
+* Quantas vendas foram estornadas esse mês xxx
+* Quantas vendas por tipo de pagamento esse mês xxx
+* Qual a forma de pagamento mais utilizada por ano
+* Qual a região do país com maior faturamento
+* Qual a filial do cliente xxxx com maior faturamento e menor faturamento nos últimos 3 meses
+
+**suporte**
+
+* Quais são os tickets abertos do cliente xxx
+* Quais foram os logs gerados hoje pelo sistema
+
+**produto**
+
+* Quais clientes ficaram insatisfeitos com o atendimento
+* Quais são as informações apresentadas no relatório dre gerencial
+
 
 ## **Entregamos hoje:**
 
@@ -98,7 +129,7 @@
 ---
 
 ## Encontro 3 - AAAA-MM-DD
-
+**Etapa:** 2 - Busca híbrida e filtragem por metadados
 **Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD
 
 ### Relato individual - [Nome do Integrante 1]
