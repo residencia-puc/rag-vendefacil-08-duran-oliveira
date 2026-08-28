@@ -137,35 +137,48 @@ Definimos algumas perguntas possíveis para o RAG. Exemplos:
 ---
 
 ## Encontro 3 - 2026-08-28
+
 **Etapa:** 1 - Ingestão heterogênea, metadados e indexação vetorial
 
 ### Relato individual - Patricia Oquendo Duran
-* Pesquisei sobre qual seria a melhor abordagem para processar os arquivos .txt para esse RAG. A pesquisa mostrou que seria ideal finalizar o dicionário de dados e verificar quais campos são utilizados em comum entre os arquivos e analisar quais deles seriam necessários para responder nossas perguntas e assim criar o arquivo schema da etapa 1. A pesquisa apontou também ser necessário mascarar os dados,  que definirmos como sensíveis, antes de gerar os embedding do arquivo e-mails.txt por exemplo.
-* Definimos que e-mail será mascarado
-* Finalizei dicionário de dados 
-* Analisei campos para gerar o schema adequado, que será preenchido no processamento dos arquivos 
-* Fiz commit e pull request 
 
-### Relato individual - [Nome do Integrante 2]
+- Pesquisei sobre qual seria a melhor abordagem para processar os arquivos .txt para esse RAG. A pesquisa mostrou que seria ideal finalizar o dicionário de dados e verificar quais campos são utilizados em comum entre os arquivos e analisar quais deles seriam necessários para responder nossas perguntas e assim criar o arquivo schema da etapa 1. A pesquisa apontou também ser necessário mascarar os dados, que definirmos como sensíveis, antes de gerar os embedding do arquivo e-mails.txt por exemplo.
+- Definimos que e-mail será mascarado
+- Finalizei dicionário de dados
+- Analisei campos para gerar o schema adequado, que será preenchido no processamento dos arquivos
+- Fiz commit e pull request
+
+### Relato individual - Diogo Oliveira
+
+- Pesquisei as melhores abordagens para processar arquivos nos formatos CSV e JSONL, buscando definir a forma mais adequada de implementar o RAG para realizar a leitura, o processamento e a consulta das informações presentes nesses diferentes formatos.
+- Definição de que os e-mails deverão ser mascarados durante o processamento.
+- Finalização do dicionário de dados.
+- Análise dos campos para definição do schema adequado, que será utilizado durante o processamento dos arquivos.
+- commit e pull request.
 
 ### Resumo do dia (escrito em conjunto)
+
 Pesquisamos como processar os diferentes tipos de arquivos ( txt e json) e iniciamos análise sobre quais campos farão parte do Schema da etapa 1
 
 ## **Entregamos hoje:**
-Finalizamos dicionário 
-Geramos uma tabela para analisar quais campos os arquivos tem em comum e quais poderiam ser utilizados no schema 
+
+Finalizamos dicionário
+Geramos uma tabela para analisar quais campos os arquivos tem em comum e quais poderiam ser utilizados no schema
 
 ## **Ficou pendente:**
 
 Geração do Schema e demais atividades da etapa 1
 
 ## **Bloqueios em aberto:**
-Dificuldades na agilidade em definir e desenvolver as tarefas dessa etapa  
+
+Dificuldades na agilidade em definir e desenvolver as tarefas dessa etapa
 
 ## **Próximo passo (início do encontro 4):**
+
 Definir os campos do schema, gerar o mesmo e processar os arquivos
 
 ## **Uso de assistentes de IA:**
+
 Para gerar os dicionarios e tabela de comparação da utilização dos campos
 
 ---
