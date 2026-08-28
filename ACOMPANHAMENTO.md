@@ -136,30 +136,44 @@ Definimos algumas perguntas possíveis para o RAG. Exemplos:
 
 ---
 
-## Encontro 3 - AAAA-MM-DD
+## Encontro 3 - 2026-08-28
+**Etapa:** 1 - Ingestão heterogênea, metadados e indexação vetorial
 
-**Etapa:** 2 - Busca híbrida e filtragem por metadados
-**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD
-
-### Relato individual - [Nome do Integrante 1]
+### Relato individual - Patricia Oquendo Duran
+* Pesquisei sobre qual seria a melhor abordagem para processar os arquivos .txt para esse RAG. A pesquisa mostrou que seria ideal finalizar o dicionário de dados e verificar quais campos são utilizados em comum entre os arquivos e analisar quais deles seriam necessários para responder nossas perguntas e assim criar o arquivo schema da etapa 1. A pesquisa apontou também ser necessário mascarar os dados,  que definirmos como sensíveis, antes de gerar os embedding do arquivo e-mails.txt por exemplo.
+* Definimos que e-mail será mascarado
+* Finalizei dicionário de dados 
+* Analisei campos para gerar o schema adequado, que será preenchido no processamento dos arquivos 
+* Fiz commit e pull request 
 
 ### Relato individual - [Nome do Integrante 2]
 
 ### Resumo do dia (escrito em conjunto)
+Pesquisamos como processar os diferentes tipos de arquivos ( txt e json) e iniciamos análise sobre quais campos farão parte do Schema da etapa 1
 
 ## **Entregamos hoje:**
+Finalizamos dicionário 
+Geramos uma tabela para analisar quais campos os arquivos tem em comum e quais poderiam ser utilizados no schema 
 
 ## **Ficou pendente:**
 
+Geração do Schema e demais atividades da etapa 1
+
 ## **Bloqueios em aberto:**
+Dificuldades na agilidade em definir e desenvolver as tarefas dessa etapa  
 
 ## **Próximo passo (início do encontro 4):**
+Definir os campos do schema, gerar o mesmo e processar os arquivos
 
 ## **Uso de assistentes de IA:**
+Para gerar os dicionarios e tabela de comparação da utilização dos campos
 
 ---
 
 ## Encontro 4 - AAAA-MM-DD
+
+**Etapa:** 2 - Busca híbrida e filtragem por metadados
+**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD
 
 **Etapa:** 4 - Avaliação (RAG Triad), interface e relatório
 
