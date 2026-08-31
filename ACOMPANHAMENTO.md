@@ -185,26 +185,66 @@ Para gerar os dicionarios e tabela de comparação da utilização dos campos
 
 ## Encontro 4 - AAAA-MM-DD
 
-**Etapa:** 2 - Busca híbrida e filtragem por metadados
-**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD
+**Etapa:** 1 - Ingestão + Vector DB (concluída e refatorada)
 
-**Etapa:** 4 - Avaliação (RAG Triad), interface e relatório
+**Etapa:** 2 - Busca híbrida e filtragem por metadados (não iniciada)
+**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD (não iniciada)
+**Etapa:** 4 - Avaliação (RAG Triad), interface e relatório (não iniciada)
 
-### Relato individual - [Nome do Integrante 1]
+### Relato individual - Diogo Oliveira
+
+- Concluí e validei a Etapa 1 (ingestão + vector DB). O pipeline `src/ingest.py` varre
+  `data/` recursivamente, detecta o formato pela extensão (csv, json, jsonl, md, pdf, txt),
+  aplica chunking adaptativo por tipo de fonte (linha-a-linha para CSV/JSON/JSONL, split
+  por cabeçalho para Markdown, `RecursiveCharacterTextSplitter` para texto corrido/PDF) e
+  enriquece cada chunk com metadados obrigatórios via `ChunkMetadata` (Pydantic). Rodei a
+  ingestão sobre o corpus completo (~80 arquivos, ~5500+ chunks) e persisti o índice FAISS
+  em `index/` usando embeddings `sentence-transformers/all-MiniLM-L6-v2`.
+
+- Em seguida refatorei o `ingest.py` aplicando princípios de Clean Code: separei
+  responsabilidades (listagem de arquivos, processamento por arquivo, chunking,
+  enriquecimento de metadados e indexação em funções isoladas), troquei `print` por
+  `logging`, adicionei `try/except` por arquivo para que uma falha isolada (ex: PDF com
+  xref corrompido) não derrube a ingestão inteira, e adicionei validação defensiva na
+  construção do índice.
 
 ### Relato individual - [Nome do Integrante 2]
+
+> **Nota sobre a equipe:** a partir deste encontro, o projeto passou a ser conduzido
+> individualmente por [Diogo], já que minha parceira saiu da residência. Os relatos
+> abaixo refletem esse novo formato.
 
 ### Resumo do dia (escrito em conjunto)
 
 ## **Entregamos hoje:**
 
+- Pipeline de ingestão (`src/ingest.py`) funcional para os 6 formatos de fonte exigidos
+- Schema de metadados obrigatório (`src/schema.py`, `ChunkMetadata`, `TipoFonte`)
+- Índice FAISS persistido em `index/` a partir do corpus completo fornecido
+- Refatoração do `ingest.py` para Clean Code (separação de responsabilidades, logging,
+  tratamento de erro por arquivo)
+
 ## **Ficou pendente:**
+
+- Preenchimento do campo `departamento` no metadata (hoje sempre `None`, decisão
+  pendente: inferir por convenção de nome de arquivo/pasta ou classificar via LLM)
+- Etapa 2 (busca híbrida FAISS + filtros por metadados) — não iniciada
+- Etapa 3 (síntese estruturada com Pydantic, citação de evidência, guardrails de LGPD)
+  — não iniciada
+- Etapa 4 (avaliação via RAG Triad, interface, relatório) — não iniciada
 
 ## **Bloqueios em aberto:**
 
 ## **Preparação para o Demo Day:**
 
 ## **Uso de assistentes de IA:**
+
+- Usei o Claude (Anthropic) para: me auxiliar na estrutura do pipeline de ingestão e do schema de metadados antes de codar;
+- Revisão do log de execução do `ingest.py` e explicar avisos/comportamentos (deprecation warning do `langchain-community`, avisos de `xref` nos PDFs, comportamento do `CSVLoader` linha a linha)
+- Refatorar `ingest.py` aplicando princípios de Clean Code (separação de
+  responsabilidades, logging, tratamento de erro por arquivo).
+
+- Todo o código gerado foi revisado e executado por mim antes de ser incorporado ao repositório.
 
 ---
 
