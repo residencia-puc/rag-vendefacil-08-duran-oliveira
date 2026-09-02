@@ -248,4 +248,63 @@ Para gerar os dicionarios e tabela de comparação da utilização dos campos
 
 ---
 
+## Encontro 5 - 2026-09-02
+
+**Etapa:** 1 - Ingestão + Vector DB (concluída e refatorada)
+**Etapa:** 2 - Busca híbrida e filtragem por metadados (iniciada)
+
+**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD (não iniciada)
+**Etapa:** 4 - Avaliação (RAG Triad), interface e relatório (não iniciada)
+
+### Relato individual - Diogo Oliveira
+
+Iniciei o planejamento da Etapa 2 (busca híbrida + filtragem por metadados). Definia arquitetura em passos:
+
+- 1: resolver o campo `departamento` pendente da Etapa 1 e extrair o vocabulário fechado de metadados a partir do índice já construído;
+- 2: Query Analyzer via LLM com saída estruturada, restrito a esse vocabulário fechado;
+- 3: Normalização e validação do filtro extraído;
+- 4: Busca densa (FAISS) e esparsa (BM25) em paralelo;
+- 5: Fusão dos rankings via Reciprocal Rank Fusion (RRF);
+- 6: Aplicação do filtro por pré-filtragem do subconjunto de documentos, evitando a armadilha do `fetch_k` padrão do FAISS retornar vazio em filtros seletivos.
+
+Decidi a abordagem do Query Analyzer por LLM com saída estruturada (em vez de regras/dicionário de sinônimos), pela robustez a fraseado variado, assumindo o custo adicional e a necessidade de vocabulário fechado explícito no prompt para evitar alucinação de valores de filtro.
+
+Também decidi escopo do vocabulário de metadados: resolver apenas `departamento` agora (inferência por convenção de nome de arquivo, regra determinística e barata), mantendo `fonte` e `confidencialidade` como os demais campos filtráveis. Optei por não introduzir campos como `state`/`module` nesta etapa, pois exigiriam um classificador de conteúdo, trabalho de pré-processamento fora do escopo da Etapa 2.
+
+### Resumo do dia (escrito em conjunto)
+
+_(projeto individual a partir do Encontro 4, seção mantida apenas para aderência ao template do curso)_
+
+## **Entregamos hoje:**
+
+- Plano de arquitetura da Etapa 2, dividido em 6 passos sequenciais
+- Decisão de arquitetura registrada e justificada: Query Analyzer por LLM com saída estruturada e vocabulário fechado (vs. abordagem por regras)
+- Regra de inferência para `departamento` (por convenção de nome de arquivo), ainda não aplicada ao `ingest.py`
+- Rascunho da função de extração do vocabulário fechado de metadados a partir do índice FAISS já persistido
+
+## **Ficou pendente:**
+
+- Aplicar `inferir_departamento` no `ingest.py` e reingerir o corpus
+- Implementar o Query Analyzer (schema Pydantic + prompt com vocabulário fechado + chamada estruturada via OpenRouter)
+- Implementar busca densa, busca esparsa (BM25) e fusão RRF
+- Implementar aplicação do filtro por pré-filtragem (`src/retrieve.py` completo)
+
+## **Bloqueios em aberto:**
+
+- Nenhum bloqueio técnico até o momento, apenas decisões de escopo já resolvidas nesta sessão
+
+## **Próximo passo (início do próximo encontro):**
+
+- Aplicar a regra de `departamento` no `ingest.py`, reingerir o corpus e implementar o Query Analyzer (passo 2 do plano)
+
+## **Uso de assistentes de IA:**
+
+Usei o Claude (Anthropic) para:
+
+- 1: Estruturar o plano de implementação da Etapa 2 em passos sequenciais;
+- 2: apresentar e comparar as duas abordagens válidas para o Query Analyzer (regras vs. LLM) e os trade-offs de estender o schema de metadados agora vs. depois;
+- 3: rascunhar a função de inferência de `departamento` e o esqueleto de extração de vocabulário fechado.
+
+Nenhum código foi ainda aplicado ao repositório nesta sessão, apenas planejamento e rascunhos, a serem implementados e validados no próximo encontro.
+
 _TIC em Trilhas · PUC-Rio · Instituto ECOA · MCTI Futuro · Softex_
