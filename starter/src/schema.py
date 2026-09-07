@@ -21,4 +21,13 @@ class ChunkMetadata(BaseModel):
     confidencialidade: Optional[str] = "interno"
     pagina: Optional[int] = None
     posicao_no_doc: int
+
+class FiltroMetadados(BaseModel):
+    fonte: Optional[str] = None
+    departamento: Optional[str] = None
+    confidencialidade: Optional[str] = None
+
+    def to_langchain_filter(self) -> dict:
+        """Converte para o formato de filtro esperado pelo FAISS do LangChain, omitindo campos não preenchidos."""
+        return {k: v for k, v in self.model_dump().items() if v is not None}
     

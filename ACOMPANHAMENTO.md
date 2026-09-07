@@ -248,4 +248,114 @@ Para gerar os dicionarios e tabela de comparação da utilização dos campos
 
 ---
 
+## Encontro 5 - 2026-09-02
+
+**Etapa:** 1 - Ingestão + Vector DB (concluída e refatorada)
+**Etapa:** 2 - Busca híbrida e filtragem por metadados (iniciada)
+
+**Etapa:** 3 - Síntese estruturada, evidência e guardrails de LGPD (não iniciada)
+**Etapa:** 4 - Avaliação (RAG Triad), interface e relatório (não iniciada)
+
+### Relato individual - Diogo Oliveira
+
+Iniciei o planejamento da Etapa 2 (busca híbrida + filtragem por metadados). Definia arquitetura em passos:
+
+- 1: resolver o campo `departamento` pendente da Etapa 1 e extrair o vocabulário fechado de metadados a partir do índice já construído;
+- 2: Query Analyzer via LLM com saída estruturada, restrito a esse vocabulário fechado;
+- 3: Normalização e validação do filtro extraído;
+- 4: Busca densa (FAISS) e esparsa (BM25) em paralelo;
+- 5: Fusão dos rankings via Reciprocal Rank Fusion (RRF);
+- 6: Aplicação do filtro por pré-filtragem do subconjunto de documentos, evitando a armadilha do `fetch_k` padrão do FAISS retornar vazio em filtros seletivos.
+
+Decidi a abordagem do Query Analyzer por LLM com saída estruturada (em vez de regras/dicionário de sinônimos), pela robustez a fraseado variado, assumindo o custo adicional e a necessidade de vocabulário fechado explícito no prompt para evitar alucinação de valores de filtro.
+
+Também decidi escopo do vocabulário de metadados: resolver apenas `departamento` agora (inferência por convenção de nome de arquivo, regra determinística e barata), mantendo `fonte` e `confidencialidade` como os demais campos filtráveis. Optei por não introduzir campos como `state`/`module` nesta etapa, pois exigiriam um classificador de conteúdo, trabalho de pré-processamento fora do escopo da Etapa 2.
+
+### Resumo do dia (escrito em conjunto)
+
+_(projeto individual a partir do Encontro 4, seção mantida apenas para aderência ao template do curso)_
+
+## **Entregamos hoje:**
+
+- Plano de arquitetura da Etapa 2, dividido em 6 passos sequenciais
+- Decisão de arquitetura registrada e justificada: Query Analyzer por LLM com saída estruturada e vocabulário fechado (vs. abordagem por regras)
+- Regra de inferência para `departamento` (por convenção de nome de arquivo), ainda não aplicada ao `ingest.py`
+- Rascunho da função de extração do vocabulário fechado de metadados a partir do índice FAISS já persistido
+
+## **Ficou pendente:**
+
+- Aplicar `inferir_departamento` no `ingest.py` e reingerir o corpus
+- Implementar o Query Analyzer (schema Pydantic + prompt com vocabulário fechado + chamada estruturada via OpenRouter)
+- Implementar busca densa, busca esparsa (BM25) e fusão RRF
+- Implementar aplicação do filtro por pré-filtragem (`src/retrieve.py` completo)
+
+## **Bloqueios em aberto:**
+
+- Nenhum bloqueio técnico até o momento, apenas decisões de escopo já resolvidas nesta sessão
+
+## **Próximo passo (início do próximo encontro):**
+
+- Aplicar a regra de `departamento` no `ingest.py`, reingerir o corpus e implementar o Query Analyzer (passo 2 do plano)
+
+## **Uso de assistentes de IA:**
+
+Usei o Claude (Anthropic) para:
+
+- 1: Estruturar o plano de implementação da Etapa 2 em passos sequenciais;
+- 2: apresentar e comparar as duas abordagens válidas para o Query Analyzer (regras vs. LLM) e os trade-offs de estender o schema de metadados agora vs. depois;
+- 3: rascunhar a função de inferência de `departamento` e o esqueleto de extração de vocabulário fechado.
+
+Nenhum código foi ainda aplicado ao repositório nesta sessão, apenas planejamento e rascunhos, a serem implementados e validados no próximo encontro.
+
+# Encontro 6 - 2026-09-04
+
+**Etapa:** 2 - Busca híbrida e filtragem por metadados (em andamento)
+
+### Relato individual - Diogo
+
+Dei continuidade à Etapa 2 (Query Analyzer + filtro de metadados). Antes de implementar, decidi pela abordagem de **LLM com saída estruturada e vocabulário fechado** (em vez de dicionário de regras/sinônimos), justificada pelo fato de o projeto já usar OpenRouter e Pydantic — a abordagem por LLM é mais robusta a fraseado natural na pergunta, desde que o prompt injete os valores reais existentes no índice, evitando alucinação de filtros inválidos.
+
+Antes de construir o Query Analyzer, voltei à Etapa 1 para fechar duas lacunas de metadados que impediriam um vocabulário fechado útil:
+
+1. **`departamento`**, que estava sempre `None` desde a ingestão inicial, implementei `inferir_departamento()` no `ingest.py`, uma heurística determinística por convenção de nome de arquivo (prefixos `customer_*`,
+   `internal_*`, datas de reunião, nomes de arquivo específicos como `sales.csv`/`employees.csv`). Reingeri o corpus completo (5634 chunks, mesma contagem de antes — só metadados mudaram) e validei manualmente a distribuição resultante.
+2. **`confidencialidade`**, que era sempre `"interno"` (valor fixo de config), tornando o campo inútil como filtro — implementei `classificar_confidencialidade()`, heurística por palavra-chave no nome do arquivo (`senha`, `credencia`, `chave_api`, `certificado`, `root`, `banco_dados_prod`) mais uma regra explícita para `employees.csv` (dado pessoal sensível mesmo sem palavra-chave no nome). Na primeira versão, um bug de morfologia (`"credencial"` no singular não casava com `"credenciais"` no plural do nome do arquivo) deixou um arquivo sensível fora da marcação `restrito` — corrigido trocando para o radical `"credencia"`. Validei com um teste de contagem: 17 chunks marcados como `restrito`, cobrindo os 6 arquivos esperados (`employees.csv`, `customer_027_envio_credenciais_acesso_admin.txt`, `customer_028_envio_senha_certificado_digital.txt`, `internal_013_compartilhamento_chave_api_producao.txt`, `internal_014_envio_credenciais_banco_dados_prod.txt`, `internal_015_senha_root_servidores_tef.txt`).
+
+Com o vocabulário fechado populado de verdade, iniciei `src/retrieve.py`: normalização de texto (acento/caixa/espaço via `unicodedata`), extração do vocabulário fechado a partir do índice FAISS já persistido, montagem do prompt do Query Analyzer com os valores reais injetados, chamada ao LLM via OpenRouter com `response_format=json_object`, e uma segunda camada de validação que descarta qualquer valor fora do vocabulário mesmo que o LLM o devolva (defesa em profundidade contra alucinação). Adicionei também `FiltroMetadados` e `schema.py`, com um método auxiliar para converter para o formato de filtro do FAISS/LangChain.
+
+Ao testar de ponta a ponta, o Query Analyzer caiu em erro `402 Payment Required`a conta OpenRouter vinculada à `OPENROUTER_API_KEY` nunca comprou créditos. O `try/except` em `extrair_filtro` funcionou como esperado (degrada para "sem filtro" em vez de derrubar a execução), mas isso significa que o Query Analyzer ainda não foi validado com uma chamada real bem-sucedida ao LLM.
+
+### Resumo do dia
+
+Fechei os débitos de metadados pendentes desde a Etapa 1 (`departamento` e `confidencialidade`, ambos agora populados por heurística determinística e validados manualmente) e avancei a primeira metade da Etapa 2 (extração de vocabulário fechado + Query Analyzer com LLM). A parte de busca híbrida (FAISS + BM25 + fusão RRF) ainda não foi iniciada.
+
+## **Entregamos hoje:**
+
+- `inferir_departamento()` em `src/ingest.py` — resolve o campo `departamento`, antes sempre `None`;
+- `classificar_confidencialidade()` em `src/ingest.py` — resolve o campo `confidencialidade`, antes sempre fixo em `"interno"`; identifica os 6 arquivos com credenciais/dados sensíveis do corpus como `"restrito"`;
+- Reingestão completa validada (5634 chunks, metadados corretos)
+- `FiltroMetadados` em `src/schema.py`;
+- `src/retrieve.py` (versão inicial): normalização de texto, extração de vocabulário fechado a partir do índice, Query Analyzer via LLM (OpenRouter) com validação contra o vocabulário.
+
+## **Ficou pendente:**
+
+- Validar o Query Analyzer com uma chamada real bem-sucedida ao LLM (bloqueado, ver Bloqueios);
+- Busca densa (FAISS) + busca esparsa (BM25) + fusão via Reciprocal Rank Fusion;
+- Aplicação do filtro extraído na busca (estratégia de pré-filtragem, evitando a armadilha do `fetch_k` padrão do FAISS em filtros seletivos);
+- Consolidação de `retrieve.py` como pipeline único e testável.
+
+## **Bloqueios em aberto:**
+
+- Conta OpenRouter vinculada à `OPENROUTER_API_KEY` sem créditos, bloqueia validação real do Query Analyzer. Opções em avaliação: comprar créditos ou trocar temporariamente para um modelo `:free` do catálogo OpenRouter só para fins de teste.
+
+## **Preparação para o Demo Day:**
+
+- [A definir]
+
+## **Uso de assistentes de IA:**
+
+- Usei o Claude (Anthropic) para: (1) desenhar o plano da Etapa 2 passo a passo e discutir o trade-off entre abordagem por regras vs. LLM para o Query Analyzer antes de implementar; (2) revisar logs de execução da reingestão e do `retrieve.py`, incluindo diagnóstico de um bug de morfologia na heurística de `confidencialidade` (`"credencial"` não casava com `"credenciais"`) e do erro de créditos insuficientes do OpenRouter; (3) implementar `inferir_departamento()`, `classificar_confidencialidade()` e a primeira versão de `src/retrieve.py` (normalização, vocabulário fechado, Query Analyzer com validação).
+
+Todo o código gerado foi executado e os resultados conferidos manualmente por mim antes de ser incorporado ao repositório.
+
 _TIC em Trilhas · PUC-Rio · Instituto ECOA · MCTI Futuro · Softex_

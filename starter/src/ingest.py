@@ -2,9 +2,10 @@ import logging
 import sys
 import uuid
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Optional
 
-# preparando o "caminho de busca" do Python
+from pydantic import BaseModel
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -54,6 +55,39 @@ LOADERS: dict[str, Callable[[str], list[Document]]] = {
 def detectar_fonte(caminho: Path) -> TipoFonte:
     return TipoFonte(caminho.suffix.lstrip("."))
 
+# Inferência de departamento (por convenção de nome de arquivo)
+
+def inferir_departamento(arquivo: str) -> Optional[str]:
+    """
+    Infere o departamento responsável/dono do conteúdo a partir do nome do arquivo, usando convenções observadas no corpus do projeto. Determinístico e sem custo de LLM, trade-off documentado no relatório: cobre o corpus atual, mas não generaliza automaticamente para nomes de arquivo fora dessas convenções (nesse caso, cai em "outros").
+    """
+    nome = arquivo.lower()
+
+    if nome.startswith("customer_"):
+        return "atendimento"
+
+    if nome.startswith("internal_"):
+        if "lgpd" in nome or "seguranca" in nome:
+            return "seguranca"
+        return "interno"
+
+    if nome.startswith(("2026-01", "2026-02", "2026-03")):
+        return "reunioes"
+
+    if nome == "sales.csv":
+        return "vendas"
+
+    if nome == "employees.csv":
+        return "rh"
+
+    if nome in ("customers.csv", "tickets.jsonl"):
+        return "atendimento"
+
+    if nome in ("products.json", "stores.json", "system_logs.csv"):
+        return "operacoes"
+
+    return "outros"
+
 # Chunking adaptativo por tipo de fonte
 def _chunk_markdown(docs: list[Document]) -> list[Document]:
     splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[("#", "h1"), ("##", "h2")])
@@ -77,6 +111,42 @@ def chunkar(docs: list[Document], fonte: TipoFonte) -> list[Document]:
         case _:
             return _chunk_texto_corrido(docs)
 
+# Classificação de confidencialidade (heurística por nome de arquivo)
+_PALAVRAS_CHAVE_RESTRITO = (
+    "senha",
+    "credencia",
+    "chave_api",
+    "certificado",
+    "root",
+    "banco_dados_prod",
+)
+
+
+def classificar_confidencialidade(arquivo: str) -> str:
+    """
+    Heurística por palavra-chave no nome do arquivo para identificar conteúdo
+    sensível (credenciais, segredos de produção) que deve ser tratado como
+    'restrito' em vez do padrão 'interno'.
+
+    ATENÇÃO: isso é uma primeira linha de defesa baseada em nome de arquivo,
+    não uma varredura de conteúdo. Arquivos que contenham dados sensíveis sem
+    sinalizar isso no nome (ex: CPF solto no meio de um chamado de suporte)
+    NÃO são pegos por esta função — a redação/anonimização de PII no corpo do
+    texto é responsabilidade de um guardrail separado na Etapa 3, aplicado no
+    momento da síntese, não da ingestão.
+    """
+    nome = arquivo.lower()
+
+    if any(palavra in nome for palavra in _PALAVRAS_CHAVE_RESTRITO):
+        return "restrito"
+
+    if nome == "employees.csv":
+        # dados pessoais de funcionários (CPF, salário) — dado sensível LGPD
+        # mesmo sem "senha"/"credencial" no nome
+        return "restrito"
+
+    return CONFIDENCIALIDADE_PADRAO
+
 # Enriquecimento de metadados
 def _construir_metadata(
     chunk: Document, fonte: TipoFonte, arquivo: str, doc_id: str, posicao: int
@@ -86,7 +156,8 @@ def _construir_metadata(
         chunk_id=str(uuid.uuid4()),
         fonte=fonte,
         arquivo_origem=arquivo,
-        confidencialidade=CONFIDENCIALIDADE_PADRAO,
+        departamento=inferir_departamento(arquivo),
+        confidencialidade=classificar_confidencialidade(arquivo),
         pagina=chunk.metadata.get("page"),
         posicao_no_doc=posicao,
     )
@@ -139,4 +210,8 @@ def construir_e_salvar_index(chunks: list[Document], index_dir: str = INDEX_DIR)
 
 if __name__ == "__main__":
     chunks = ingerir_diretorio()
+    restritos = [c for c in chunks if c.metadata.get("confidencialidade") == "restrito"]
+    logger.info("Chunks marcados como 'restrito': %d", len(restritos))
+    for c in restritos:
+        logger.info("  → %s", c.metadata.get("arquivo_origem"))
     construir_e_salvar_index(chunks)
